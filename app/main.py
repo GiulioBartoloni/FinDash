@@ -3,12 +3,12 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 import networkx as nx
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly.io as pio
 
 from fpdf import FPDF
 
@@ -192,7 +192,7 @@ else:
         st.rerun()
         
     st.sidebar.markdown(
-        '*<div style="margin-top: 400px; text-align: left; font-size: 16px;">~ Swim with the sharks ~</div>*',
+        '*<div style="margin-top: 350px; text-align: left; font-size: 16px;">~ Swim with the sharks ~</div>*',
         unsafe_allow_html=True
     ) 
     
@@ -669,11 +669,13 @@ else:
                 
                 try:
                     # Estraggo le immagini dei chart 
-                    chart1.write_image("temp_images/chart1.png", width=1100, height=800)
-                    chart2.write_image("temp_images/chart2.png", width=1100, height=800)
-                    chart3.write_image("temp_images/chart3.png", width=1100, height=800)
-                    chart4.write_image("temp_images/chart4.png", width=1100, height=800)
-                    
+                    try:
+                        chart1.write_image("temp_images/chart1.png", width=1100, height=800)
+                        chart2.write_image("temp_images/chart2.png", width=1100, height=800)
+                        chart3.write_image("temp_images/chart3.png", width=1100, height=800)
+                        chart4.write_image("temp_images/chart4.png", width=1100, height=800)
+                    except Exception:
+                        print(Exception)
                     # Genero il PDF e aggiungo una pagina per ciascun grafico
                     pdf = FPDF()
                     for i in range(1, 5):
@@ -697,8 +699,9 @@ else:
                     )
                     
                 finally:
+                    pass
                     # Elimino la cartella temporanea 
-                    shutil.rmtree("temp_images", ignore_errors=True)
+                    # shutil.rmtree("temp_images", ignore_errors=True)
             
     ###############################################################################################
     #                   SEZIONE CON LO STUDIO DELLE CORRELAZIONI                                  #
