@@ -701,7 +701,7 @@ else:
                 finally:
                     pass
                     # Elimino la cartella temporanea 
-                    # shutil.rmtree("temp_images", ignore_errors=True)
+                    shutil.rmtree("temp_images", ignore_errors=True)
             
     ###############################################################################################
     #                   SEZIONE CON LO STUDIO DELLE CORRELAZIONI                                  #
