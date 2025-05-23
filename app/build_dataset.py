@@ -15,8 +15,6 @@ import configparser
 import time
 from multiprocessing import Process, Value, Lock
 import numpy as np
-# My libs
-from progress_bar import printProgressBar
 
     #############################################################################################################
 
@@ -66,15 +64,11 @@ if __name__ == "__main__":
     if not os.path.exists("datasets/stock_data"): 
         os.makedirs("datasets/stock_data") 
     
-    print("Gathering historical data...\n")
-    printProgressBar(0, len(STOCKS_TO_ANALYZE), prefix = 'Progress:', suffix = 'Completed', length = 100)
-    
-    progressBarCount = 0
+    print("[LOG]: Gathering historical data...")
+        
     for ticker in STOCKS_TO_ANALYZE:
         retrieve_stock_history(ticker)
-        printProgressBar(progressBarCount + 1, len(STOCKS_TO_ANALYZE), prefix = 'Progress:', suffix = 'Completed', length = 100)
-        progressBarCount += 1
     
     
-    print("\nData was successfully extracted!")
-    print(f"The operation was completed in {round(time.time()-start,2)} seconds")    
+    print("[LOG]: Data was successfully extracted!")
+    print(f"[LOG]: The operation was completed in {round(time.time()-start,2)} seconds\n")    

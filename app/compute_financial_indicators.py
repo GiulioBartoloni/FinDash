@@ -41,7 +41,6 @@ import time
 from datetime import datetime
 # My libs
 import compute as cpt
-from progress_bar import printProgressBar
 
     #############################################################################################################
 
@@ -54,7 +53,7 @@ PROCESS_NUM = config.getint('SCRIPTS_ANALYSIS', 'process_count')
     #############################################################################################################
 
 # Funzione per multi-processing
-def process(STOCKS, progressBarCount, lock):
+def process(STOCKS):
     # Itero sul sottoinsieme di stock passato e calcolo tutti gli indicatori
     for ticker in STOCKS:    
         
@@ -77,22 +76,15 @@ def process(STOCKS, progressBarCount, lock):
         
         # Salvo il file in CSV rimpiazzando il precedente
         data.to_csv(filename, index=False)
-        # Aggiorno la progress bar
-        with lock:
-            printProgressBar(progressBarCount.value + 1, len(STOCKS_TO_ANALYZE), prefix = 'Progress:', suffix = 'Completed', length = 100)
-            progressBarCount.value += 1
+        
 
     #############################################################################################################
 
 if __name__ == "__main__":
     start = time.time()
     
-    print("Calculating financial indicators...\n")
-    printProgressBar(0, len(STOCKS_TO_ANALYZE), prefix = 'Progress:', suffix = 'Completed', length = 100)
-
-    # Inizializzo il necessario per la condivisione della variabile che gestisce la barra    
-    progressBarCount = Value('i', 0) 
-    lock = Lock()
+    print("[LOG]: Calculating financial indicators...")
+    
     processes = []
     
     # Divido la lista delle stock in parti approssimativamente uguali
@@ -100,7 +92,7 @@ if __name__ == "__main__":
     
     # Creo tutti i processi e gli passo le variabili necessarie
     for i in range(PROCESS_NUM):
-        p = Process(target=process, args=(split_stocks[i], progressBarCount, lock))
+        p = Process(target=process, args=(split_stocks[i],))
         p.start()
         processes.append(p)
         
@@ -108,8 +100,8 @@ if __name__ == "__main__":
     for p in processes:
         p.join() 
          
-    print("\nThe operation was completed succesfully, datasets are now up to date!")
-    print(f"The operation was completed in {round(time.time()-start,2)} seconds with {PROCESS_NUM} processes")    
+    print("[LOG]: Dataset updated succesfully!")
+    print(f"[LOG]: The operation was completed in {round(time.time()-start,2)} seconds with {PROCESS_NUM} processes")    
         
     today = datetime.now().strftime('%Y-%m-%d')
     config.set('DATASET', 'latest_update', today)
